@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wayback Machine - v1</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #1e1e1e;
+            --bg-glass: rgba(255, 255, 255, 0.05);
+            --text-primary: #ffffff;
+            --text-secondary: #a3a3a3;
+            --text-muted: #6b7280;
+            --accent-primary: #6366f1;
+            --accent-secondary: #ec4899;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+            --gradient-secondary: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+            --gradient-dark: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --border-hover: rgba(255, 255, 255, 0.2);
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 25px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.6);
+            --shadow-glow: 0 0 30px rgba(99, 102, 241, 0.3);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body {
+            background-image:
+                radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.02"><circle cx="30" cy="30" r="1"/></g></svg>');
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            position: relative;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        }
+
+        .input-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: stretch;
+        }
+
+        .input-wrapper {
+            position: relative;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            font-weight: 500;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            outline: none;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .input-field:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            background: var(--bg-card);
+        }
+
+        .input-field::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .toggle-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 2rem 0;
+            padding: 1rem;
+            background: var(--bg-glass);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .toggle-wrapper {
+            position: relative;
+        }
+
+        .toggle-input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .toggle-slider {
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            position: relative;
+            transition: var(--transition);
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+        }
+
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--text-secondary);
+            top: 2px;
+            left: 3px;
+            transition: var(--transition);
+        }
+
+        .toggle-input:checked+.toggle-slider {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .toggle-input:checked+.toggle-slider::before {
+            transform: translateX(24px);
+            background: white;
+        }
+
+        .toggle-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 3rem 0 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+            z-index: -1;
+        }
+
+        .section-title span {
+            background: var(--bg-card);
+            padding: 0 2rem;
+        }
+
+        .btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-height: 48px;
+            font-family: inherit;
+            user-select: none;
+            transform-origin: center;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md), var(--shadow-glow);
+        }
+
+        .btn-secondary {
+            background: var(--gradient-secondary);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md), 0 0 30px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-ghost {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-ghost:hover {
+            background: var(--bg-glass);
+            border-color: var(--border-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn i {
+            flex-shrink: 0;
+            font-size: 1em;
+        }
+
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-grid.main-actions {
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 1.5rem;
+        }
+
+        .dork-btn {
+            font-size: 0.8rem;
+            padding: 0.75rem 1rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+            line-height: 1.3;
+            height: auto;
+            min-height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1), transparent);
+            animation: float 20s infinite linear;
+        }
+
+        .floating-circle:nth-child(1) {
+            width: 200px;
+            height: 200px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-circle:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            right: 10%;
+            animation-delay: -10s;
+        }
+
+        .floating-circle:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            33% {
+                transform: translateY(-20px) rotate(120deg);
+            }
+
+            66% {
+                transform: translateY(20px) rotate(240deg);
+            }
+        }
+
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .btn-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem 1.5rem;
+                margin: 0 0.5rem;
+            }
+
+            .input-group {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn {
+                font-size: 0.875rem;
+                padding: 1rem 1.25rem;
+            }
+
+            .btn-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .dork-btn {
+                font-size: 0.75rem;
+                min-height: 48px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem 0.5rem;
+            }
+
+            .container {
+                padding: 1.5rem 1rem;
+                border-radius: var(--radius-md);
+            }
+
+            .title {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .btn-grid {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .btn {
+                padding: 0.875rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .dork-btn {
+                font-size: 0.7rem;
+                padding: 0.75rem 0.875rem;
+                min-height: 44px;
+            }
+
+            .section-title {
+                font-size: 1.25rem;
+                margin: 2rem 0 1rem;
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-secondary);
+        }
+
+        /* Focus styles for accessibility */
+        .btn:focus-visible {
+            outline: 2px solid var(--accent-primary);
+            outline-offset: 2px;
+        }
+
+        .input-field:focus-visible {
+            outline: 2px solid var(--accent-primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="floating-elements">
+        <div class="floating-circle"></div>
+        <div class="floating-circle"></div>
+        <div class="floating-circle"></div>
+    </div>
+
+    <div class="header">
+        <h1 class="title">Wayback Machine</h1>
+        <p class="subtitle">Advanced Domain Intelligence & OSINT Toolkit</p>
+    </div>
+
+    <div class="container glass-effect">
+        <div class="input-section">
+            <div class="input-group">
+                <div class="input-wrapper">
+                    <input type="text" id="mediumInput" class="input-field"
+                        placeholder="Enter Medium URL for Freedium access">
+                </div>
+                <button type="button" id="freediumBtn" class="btn btn-secondary">
+                    <i class="fas fa-book-open-reader"></i>
+                    Freedium
+                </button>
+            </div>
+
+            <form id="waybackForm">
+                <div class="input-group">
+                    <div class="input-wrapper">
+                        <input type="text" id="domainInput" class="input-field"
+                            placeholder="Enter domain (e.g., example.com)" required>
+                    </div>
+                    <button type="button" id="whoisBtn" class="btn btn-secondary">
+                        <i class="fas fa-user-secret"></i>
+                        WhoIs
+                    </button>
+                </div>
+
+                <div class="toggle-container">
+    <label class="toggle-label">Clear Input on Action</label>
+    <label class="toggle-wrapper">
+        <input type="checkbox" id="clearToggle" class="toggle-input">
+        <span class="toggle-slider"></span>
+    </label>
+</div>
+
+
+                <div class="btn-grid main-actions">
+                    <button type="submit" id="viewSnapshotsBtn" class="btn btn-primary">
+                        <i class="fas fa-history"></i>
+                        View Snapshots
+                    </button>
+                    <button type="button" id="viewcrtShBtn" class="btn btn-primary">
+                        <i class="fas fa-certificate"></i>
+                        Subdomains (Crt.sh)
+                    </button>
+                    <button type="button" id="viewvtotal_subDomainsBtn" class="btn btn-primary">
+                        <i class="fas fa-shield-virus"></i>
+                        VirusTotal Subdomains
+                    </button>
+                    <button type="button" id="nslookupBtn" class="btn btn-primary">
+                        <i class="fas fa-network-wired"></i>
+                        NSLookup
+                    </button>
+                    <button type="button" id="downloadJsonBtn" class="btn btn-primary">
+                        <i class="fas fa-file-download"></i>
+                        Download JSON
+                    </button>
+                    <button type="button" id="subintelBtn" class="btn btn-primary">
+                        <i class="fas fa-eye"></i>
+                        Subintel
+                    </button>
+                    
+                    <button type="button" id="searchSubdomainsGoogleBtn" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                        Google Subdomains
+                    </button>
+                    <button type="button" id="searchSubSubdomainsGoogleBtn" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                        Sub-Subdomains
+                    </button>
+                </div>
+
+                <h3 class="section-title">
+                    <span>Google Dorks & Security Research</span>
+                </h3>
+
+                <div class="btn-grid">
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:index.of">Index
+                        Listings</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="site:.gov inurl:login">Gov Login
+                        Pages</button>
+                    <button type="button" class="btn btn-ghost dork-btn"
+                        data-dork="filetype:pdf inurl:confidential">Confidential PDFs</button>
+                    <button type="button" class="btn btn-ghost dork-btn"
+                        data-dork="inurl:admin ext:php | ext:asp | ext:aspx | ext:jsp | ext:html">Admin Pages</button>
+                    <button type="button" class="btn btn-ghost dork-btn"
+                        data-dork="inurl:upload ext:php | ext:asp | ext:aspx | ext:jsp | ext:html">Upload Pages</button>
+                    <button type="button" class="btn btn-ghost dork-btn"
+                        data-dork="inurl:backup ext:zip | ext:tar | ext:gz | ext:rar | ext:7z | ext:sql">Backup
+                        Files</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:sitemap.xml">Sitemap
+                        Files</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" phpinfo()\"">PHP
+                        Info</button>
+                    <button type="button" class="btn btn-ghost dork-btn"
+                        data-dork="inurl:wp-admin | inurl:wp-content | inurl:wp-includes">WordPress Files</button>
+                    <button type="button" class="btn btn-ghost dork-btn"
+                        data-dork="inurl:config ext:php | ext:asp | ext:aspx | ext:jsp | ext:html | ext:txt">Config
+                        Files</button>
+                    <button type="button" class="btn btn-ghost dork-btn"
+                        data-dork="inurl:env ext:txt | ext:log">Environment Files</button>
+                    <button type="button" class="btn btn-ghost dork-btn"
+                        data-dork="inurl:robots.txt">Robots.txt</button>
+                    <button type="button" class="btn btn-ghost dork-btn"
+                        data-dork="inurl:test ext:php | ext:asp | ext:aspx | ext:jsp | ext:html">Test Pages</button>
+                    <button type="button" class="btn btn-ghost dork-btn"
+                        data-dork="inurl:debug ext:php | ext:asp | ext:aspx | ext:jsp | ext:html">Debug Pages</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:error ext:log | ext:txt">Error
+                        Logs</button>
+                    <button type="button" class="btn btn-ghost dork-btn"
+                        data-dork="inurl:password ext:txt | ext:log">Password Files</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" Apache Status\"">Apache
+                        Status</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" Dashboard\"
+                        inurl:8080">Dashboards</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" SQL Error\" |
+                        intext:\"SQL syntax\"">SQL Errors</button>
+                    <button type="button" class="btn btn-ghost dork-btn"
+                        data-dork="inurl:phpmyadmin">phpMyAdmin</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:cpanel">cPanel</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:webmail">Webmail</button>
+                    <button type="button" class="btn btn-ghost dork-btn"
+                        data-dork="inurl:rds.amazonaws.com | inurl:s3.amazonaws.com">AWS Services</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:azurewebsites.net">Azure
+                        Sites</button>
+                    <button type="button" class="btn btn-ghost dork-btn"
+                        data-dork="inurl:gitlab.com | inurl:bitbucket.org">Git Repos</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:jira.atlassian.net">Jira
+                        Instances</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:slack.com intext:\"
+                        public_channel\"">Slack Channels</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:zoom.us/j">Zoom
+                        Meetings</button>
+                    <button type="button" class="btn btn-ghost dork-btn"
+                        data-dork="inurl:teamviewer.com/link">TeamViewer</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" network cameras\"
+                        inurl:viewerframe.cgi">IP Cameras</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" webcamXP\" |
+                        intitle:\"webcam7\"">WebcamXP/7</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" /admin\" \"powered
+                        by\"">Admin Portals</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" /login\" \"forgot
+                        password\"">Login Pages</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" /register\" \"sign
+                        up\"">Registration</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" /contact\" \"email
+                        us\"">Contact Pages</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" /careers\" \"job
+                        openings\"">Career Pages</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" swagger-ui.html\" |
+                        intitle:\"Swagger UI\"">Swagger UI</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" /.git/config\"">Git
+                        Config</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" /.svn/entries\"">SVN
+                        Entries</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\"
+                        /.well-known/security.txt\"">Security.txt</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\"
+                        /crossdomain.xml\"">Crossdomain</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\"
+                        /clientaccesspolicy.xml\"">Client Policy</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" test page for
+                        apache\"">Apache Test</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" IIS7\" \"Default Web
+                        Site\"">IIS7 Default</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" php.ini\" |
+                        intitle:\"php.ini\"">PHP Config</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" web.config\" |
+                        intitle:\"web.config\"">Web Config</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\"
+                        connectionstrings.config\"">Connection Strings</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" passwords.txt\" |
+                        inurl:\"credentials.txt\"">Credentials</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" RDP Web Access\"">RDP
+                        Access</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" Citrix XenApp\" |
+                        intitle:\"Citrix StoreFront\"">Citrix</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" Juniper SSL VPN\" |
+                        intitle:\"Pulse Connect Secure\"">VPN Access</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" F5 BIG-IP\"">F5
+                        BIG-IP</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\"
+                        FortiGate\"">FortiGate</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" Palo Alto
+                        Networks\"">Palo Alto</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\"
+                        SonicWall\"">SonicWall</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" /admin/config.php\"">Admin
+                        Config</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" /wp-config.php\"">WP
+                        Config</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\"
+                        /drupal/settings.php\"">Drupal Settings</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\"
+                        /joomla/configuration.php\"">Joomla Config</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" /shell.php\" |
+                        inurl:\"/cmd.php\"">Web Shells</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" /dump.sql\" |
+                        inurl:\"/database.sql\"">DB Dumps</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" index of /ftp\"">FTP
+                        Directories</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" index of
+                        /backup\"">Backup Dirs</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" index of /logs\"">Log
+                        Directories</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" index of /mail\"">Mail
+                        Directories</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" index of /admin\"">Admin
+                        Dirs</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" index of /dev\"">Dev
+                        Directories</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" index of /test\"">Test
+                        Directories</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" index of
+                        /private\"">Private Dirs</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" wp-config.txt\" |
+                        inurl:\"wp-config.bak\"">WP Backups</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" Restricted Area\" |
+                        intitle:\"Private Access\"">Restricted</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" user.txt\" |
+                        inurl:\"pass.txt\"">User/Pass Files</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" login.txt\" |
+                        inurl:\"credentials.csv\"">Login Files</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" employee.csv\" |
+                        inurl:\"staff.csv\"">Staff Lists</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" cve-2021-44228\" |
+                        intitle:\"log4j\"">Log4j CVE</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" CVE-2017-5638\"">Struts
+                        RCE</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" CVE-2019-19781\"">Citrix
+                        RCE</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\"
+                        CVE-2020-0796\"">SMBGhost</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\"
+                        CVE-2020-1472\"">Zerologon</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" Grafana\"
+                        inurl:\"/login\"">Grafana</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" Kibana\"
+                        inurl:\"/app/kibana\"">Kibana</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" Elasticsearch
+                        Head\"">Elasticsearch</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" Jupyter Notebook\"
+                        inurl:\"/tree\"">Jupyter</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" RStudio
+                        Connect\"">RStudio</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" SonarQube\"
+                        inurl:\"/dashboard\"">SonarQube</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" Jenkins\"
+                        inurl:\"/login\"">Jenkins</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" Kubernetes
+                        Dashboard\"">Kubernetes</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" /admin/console\"
+                        intitle:\"WebLogic Server\"">WebLogic</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" /manager/html\"
+                        intitle:\"Apache Tomcat\"">Tomcat</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\"
+                        /phpmyadmin/setup\"">phpMyAdmin Setup</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" /wp-content/debug.log\"">WP
+                        Debug Log</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" /etc/passwd\"
+                        filetype:txt">Passwd File</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" /id_rsa\" |
+                        inurl:\"/id_dsa\"">SSH Keys</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" /.aws/credentials\"">AWS
+                        Creds</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" firebaseio.com\"
+                        intext:\"\"">Firebase DB</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" slack.com/archive/\"">Slack
+                        Archives</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" trello.com/b/\"
+                        intext:\"public\"">Trello Boards</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" pastebin.com\"
+                        intext:\"password\"">Pastebin</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" github.com\"
+                        intext:\"password\"">GitHub Leaks</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" gitlab.com\"
+                        intext:\"password\"">GitLab Leaks</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" bitbucket.org\"
+                        intext:\"password\"">Bitbucket</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" Login\"
+                        inurl:\"portal\"">Portals</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" admin area\"
+                        inurl:\"admin\"">Admin Areas</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" configuration\"
+                        filetype:env">Env Config</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" dashboard\"
+                        inurl:\"login\"">Dashboard</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" index of /\"
+                        \"confidential\"">Confidential</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" index of /\"
+                        \"private\"">Private Files</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" /wp-content/uploads/\"
+                        intitle:\"index of /\"">WP Uploads</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" /database.sql.zip\" |
+                        inurl:\"/db.sql.gz\"">DB Archives</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" wp-config.php.bak\"">WP
+                        Config Bak</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" installer.php\" |
+                        inurl:\"install.php\"">Installers</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" /status\" intitle:\"Server
+                        Status\"">Server Status</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" editor\"
+                        inurl:\"wysiwyg\"">WYSIWYG</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" Login\"
+                        inurl:\"control\"">Control Panel</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="intitle:\" Web Application
+                        Firewall\"">WAF Detection</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" admin\" \"version\"">Admin
+                        Versions</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" ext:log\"
+                        intext:\"error\"">Error Logs</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" site:linkedin.com
+                        intext:\"password\"">LinkedIn</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" site:github.com
+                        intext:\"api_key\"">GitHub API</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" site:trello.com
+                        intext:\"confidential\"">Trello Conf</button>
+                    <button type="button" class="btn btn-ghost dork-btn" data-dork="inurl:\" site:google.com/drive
+                        filetype:pdf \"confidential\"">Drive PDFs</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Application State Management
+        class WaybackApp {
+            constructor() {
+                this.elements = {};
+                this.init();
+            }
+
+            init() {
+                this.cacheElements();
+                this.bindEvents();
+                this.addVisualEffects();
+            }
+
+            cacheElements() {
+                this.elements = {
+                    waybackForm: document.getElementById('waybackForm'),
+                    domainInput: document.getElementById('domainInput'),
+                    mediumInput: document.getElementById('mediumInput'),
+                    clearToggle: document.getElementById('clearToggle'),
+                    freediumBtn: document.getElementById('freediumBtn'),
+                    whoisBtn: document.getElementById('whoisBtn'),
+                    viewSnapshotsBtn: document.getElementById('viewSnapshotsBtn'),
+                    viewcrtShBtn: document.getElementById('viewcrtShBtn'),
+                    nslookupBtn: document.getElementById('nslookupBtn'),
+                    downloadJsonBtn: document.getElementById('downloadJsonBtn'),
+                    subintelBtn: document.getElementById('subintelBtn'),
+                    viewvtotalSubDomainsBtn: document.getElementById('viewvtotal_subDomainsBtn'),
+                    searchSubdomainsGoogleBtn: document.getElementById('searchSubdomainsGoogleBtn'),
+                    searchSubSubdomainsGoogleBtn: document.getElementById('searchSubSubdomainsGoogleBtn'),
+                    dorkButtons: document.querySelectorAll('.dork-btn')
+                };
+            }
+
+            bindEvents() {
+                this.elements.waybackForm.addEventListener('submit', this.handleWaybackSubmit.bind(this));
+                this.elements.freediumBtn.addEventListener('click', this.handleFreedium.bind(this));
+                this.elements.whoisBtn.addEventListener('click', this.handleWhois.bind(this));
+                this.elements.viewcrtShBtn.addEventListener('click', this.handleCrtSh.bind(this));
+                this.elements.nslookupBtn.addEventListener('click', this.handleNslookup.bind(this));
+                this.elements.downloadJsonBtn.addEventListener('click', this.handleDownloadJson.bind(this));
+                this.elements.subintelBtn.addEventListener('click', this.handleSubintel.bind(this));
+                this.elements.viewvtotalSubDomainsBtn.addEventListener('click', this.handleVirusTotal.bind(this));
+                this.elements.searchSubdomainsGoogleBtn.addEventListener('click', this.handleGoogleSubdomains.bind(this));
+                this.elements.searchSubSubdomainsGoogleBtn.addEventListener('click', this.handleGoogleSubSubdomains.bind(this));
+
+                this.elements.dorkButtons.forEach(btn => {
+                    btn.addEventListener('click', this.handleDorkSearch.bind(this));
+                });
+            }
+
+            addVisualEffects() {
+                // Add hover effects to buttons
+                document.querySelectorAll('.btn').forEach(btn => {
+                    btn.addEventListener('mouseenter', function () {
+                        this.style.transform = 'translateY(-2px) scale(1.02)';
+                    });
+
+                    btn.addEventListener('mouseleave', function () {
+                        this.style.transform = 'translateY(0) scale(1)';
+                    });
+                });
+
+                // Add typing effect to placeholders
+                // this.addTypingEffect();
+            }
+
+
+            // crazy typing effect
+            // addTypingEffect() {
+            //     const inputs = document.querySelectorAll('.input-field');
+            //     inputs.forEach(input => {
+            //         const originalPlaceholder = input.placeholder;
+            //         let isTyping = false;
+
+            //         input.addEventListener('focus', function () {
+            //             if (!isTyping && this.value === '') {
+            //                 isTyping = true;
+            //                 this.placeholder = '';
+            //                 let i = 0;
+            //                 const typeWriter = () => {
+            //                     if (i < originalPlaceholder.length) {
+            //                         this.placeholder += originalPlaceholder.charAt(i);
+            //                         i++;
+            //                         setTimeout(typeWriter, 50);
+            //                     } else {
+            //                         isTyping = false;
+            //                     }
+            //                 };
+            //                 typeWriter();
+            //             }
+            //         });
+
+            //         input.addEventListener('blur', function () {
+            //             if (this.value === '') {
+            //                 this.placeholder = originalPlaceholder;
+            //                 isTyping = false;
+            //             }
+            //         });
+            //     });
+            // }
+
+            // Utility Methods
+            cleanUrl(url) {
+                return url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/+$/, "");
+            }
+
+            clearInput(inputId) {
+                if (this.elements.clearToggle.checked) {
+                    document.getElementById(inputId).value = "";
+                }
+            }
+
+            validateInput(value, message) {
+                if (!value || value.trim() === '') {
+                    this.showNotification(message, 'error');
+                    return false;
+                }
+                return true;
+            }
+
+            openInNewTab(url) {
+                window.open(url, "_blank");
+            }
+
+            showNotification(message, type = 'info') {
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 1rem 1.5rem;
+                    background: ${type === 'error' ? 'var(--accent-danger)' : 'var(--accent-success)'};
+                    color: white;
+                    border-radius: var(--radius-md);
+                    box-shadow: var(--shadow-lg);
+                    z-index: 1000;
+                    transform: translateX(100%);
+                    transition: var(--transition);
+                    max-width: 300px;
+                    word-wrap: break-word;
+                `;
+                notification.textContent = message;
+
+                document.body.appendChild(notification);
+
+                // Animate in
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(0)';
+                }, 100);
+
+                // Remove after delay
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+
+            // Event Handlers
+            handleWaybackSubmit(event) {
+                event.preventDefault();
+                const domain = this.cleanUrl(this.elements.domainInput.value.trim());
+
+                if (this.validateInput(domain, "Please enter a domain URL first.")) {
+                    const waybackUrl = `https://web.archive.org/cdx/search/cdx?url=*.${domain}/*&output=text&fl=original&collapse=urlkey`;
+                    this.openInNewTab(waybackUrl);
+                    this.clearInput("domainInput");
+                    this.showNotification("Opening Wayback Machine snapshots...", 'success');
+                }
+            }
+
+            handleFreedium() {
+                const mediumUrl = this.cleanUrl(this.elements.mediumInput.value.trim());
+
+                if (this.validateInput(mediumUrl, "Please enter a Medium URL first.")) {
+                    const freediumUrl = `https://www.freedium.cfd/${mediumUrl}`;
+                    this.openInNewTab(freediumUrl);
+                    this.showNotification("Opening Freedium reader...", 'success');
+                }
+            }
+
+            handleWhois() {
+                const domain = this.cleanUrl(this.elements.domainInput.value.trim());
+
+                if (this.validateInput(domain, "Please enter a domain URL first.")) {
+                    const whoisUrl = `https://www.whois.com/whois/${domain}`;
+                    this.openInNewTab(whoisUrl);
+                    this.clearInput("domainInput");
+                    this.showNotification("Opening WHOIS information...", 'success');
+                }
+            }
+
+            handleCrtSh() {
+                const domain = this.cleanUrl(this.elements.domainInput.value.trim());
+
+                if (this.validateInput(domain, "Please enter a domain URL first.")) {
+                    const crtShUrl = `https://crt.sh/?q=${domain}`;
+                    this.openInNewTab(crtShUrl);
+                    this.clearInput("domainInput");
+                    this.showNotification("Searching certificate transparency logs...", 'success');
+                }
+            }
+
+            handleNslookup() {
+                const domain = this.cleanUrl(this.elements.domainInput.value.trim());
+
+                if (this.validateInput(domain, "Please enter a domain URL first.")) {
+                    const nslookupUrl = `https://www.nslookup.io/domains/${domain}/dns-records/`;
+                    this.openInNewTab(nslookupUrl);
+                    this.clearInput("domainInput");
+                    this.showNotification("Looking up DNS records...", 'success');
+                }
+            }
+
+            handleSubintel() {
+                const domain = this.cleanUrl(this.elements.domainInput.value.trim());
+
+                if (this.validateInput(domain, "Please enter a domain URL first.")) {
+                    const subintelUrl = `https://subintel.tushal.io/#${encodeURIComponent(domain)}`;
+                    this.openInNewTab(subintelUrl);
+                    this.clearInput("domainInput");
+                    this.showNotification("Opening Subintel subdomain finder...", 'success');
+                }
+            }
+
+            handleVirusTotal() {
+                const domain = this.cleanUrl(this.elements.domainInput.value.trim());
+
+                if (this.validateInput(domain, "Please enter a domain URL first.")) {
+                    const vtotalUrl = `https://www.virustotal.com/gui/domain/${domain}/relations`;
+                    this.openInNewTab(vtotalUrl);
+                    this.clearInput("domainInput");
+                    this.showNotification("Opening VirusTotal analysis...", 'success');
+                }
+            }
+
+            handleGoogleSubdomains() {
+                const domain = this.cleanUrl(this.elements.domainInput.value.trim());
+
+                if (this.validateInput(domain, "Please enter a domain URL first.")) {
+                    const googleSearchUrl = `https://www.google.com/search?q=site:*.${domain}%20-site:www.${domain}`;
+                    this.openInNewTab(googleSearchUrl);
+                    this.clearInput("domainInput");
+                    this.showNotification("Searching Google for subdomains...", 'success');
+                }
+            }
+
+            handleGoogleSubSubdomains() {
+                const domain = this.cleanUrl(this.elements.domainInput.value.trim());
+
+                if (this.validateInput(domain, "Please enter a domain URL first.")) {
+                    const googleSearchUrl = `https://www.google.com/search?q=site:*.*.${domain}`;
+                    this.openInNewTab(googleSearchUrl);
+                    this.clearInput("domainInput");
+                    this.showNotification("Searching for sub-subdomains...", 'success');
+                }
+            }
+
+            handleDorkSearch(event) {
+                const domain = this.cleanUrl(this.elements.domainInput.value.trim());
+                const dork = event.target.getAttribute("data-dork");
+                const dorkName = event.target.textContent.trim();
+
+                let googleSearchUrl;
+                if (domain) {
+                    googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(dork)} site:${domain}`;
+                    this.showNotification(`Searching ${dorkName} for ${domain}...`, 'success');
+                } else {
+                    googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(dork)}`;
+                    this.showNotification(`Searching ${dorkName} globally...`, 'success');
+                }
+
+                this.openInNewTab(googleSearchUrl);
+                this.clearInput("domainInput");
+            }
+
+            async handleDownloadJson() {
+                const domain = this.cleanUrl(this.elements.domainInput.value.trim());
+
+                if (!this.validateInput(domain, "Please enter a domain URL first.")) return;
+
+                this.showNotification("Downloading JSON data...", 'info');
+
+                try {
+                    const jsonUrl = `https://web.archive.org/cdx/search/cdx?url=*.${domain}/*&output=json&fl=original&collapse=urlkey`;
+                    const corsProxyUrl = "https://cors-anywhere.herokuapp.com/";
+
+                    const response = await fetch(corsProxyUrl + jsonUrl);
+
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok: ${response.statusText}`);
+                    }
+
+                    const data = await response.json();
+
+                    if (data.length === 0) {
+                        this.showNotification("No snapshots found for this domain.", 'error');
+                        return;
+                    }
+
+                    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+
+                    a.href = url;
+                    a.download = `${domain}_snapshots.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+
+                    this.clearInput("domainInput");
+                    this.showNotification("JSON file downloaded successfully!", 'success');
+                } catch (error) {
+                    console.error("Error fetching JSON:", error);
+                    this.showNotification("Failed to download JSON. Check console for details.", 'error');
+                }
+            }
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', () => {
+            new WaybackApp();
+        });
+    </script>
+</body>
+
+</html>
