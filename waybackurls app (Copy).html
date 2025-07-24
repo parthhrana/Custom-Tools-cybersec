@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wayback Machine - v1</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+    --bg-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --primary-color: #6200ee; /* Deep Purple */
+    --primary-light: #bb86fc;
+    --secondary-color: #03dac6; /* Teal */
+    --accent-color: #cf6679; /* A softer red for accents/errors */
+    --input-bg: #2c2c2c;
+    --input-border: #444;
+    --button-hover: #3700b3;
+    --special-button-hover: #02a79b;
+    --border-radius: 8px;
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* More prominent shadow */
+}
+
+html, body {
+    height: 100%; /* Make html and body take full height */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Align content to the top */
+    padding: 40px 20px; /* Add padding to the whole page */
+    overflow-y: auto; /* Enable scrolling if content overflows */
+}
+
+h2 {
+    color: var(--primary-light);
+    margin-bottom: 30px;
+    font-size: 2.5em; /* Slightly larger title */
+    font-weight: 700; /* Bolder title */
+    letter-spacing: 0.05em;
+}
+
+h3 {
+    color: var(--secondary-color);
+    margin-top: 30px;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    font-weight: 600;
+    border-bottom: 2px solid #333;
+    padding-bottom: 10px;
+    width: 100%;
+    text-align: center;
+}
+
+.container {
+    background-color: #222;
+    padding: 40px; /* Increased padding */
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 1200px; /* Significantly increased max-width for more space */
+    box-sizing: border-box;
+    margin-bottom: 30px;
+}
+
+input[type="text"] {
+    padding: 16px; /* Increased padding */
+    width: calc(100% - 140px); /* Adjust width for button alongside, allow more space */
+    font-size: 1.1em; /* Slightly larger font */
+    border: 1px solid var(--input-border);
+    border-radius: var(--border-radius);
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    box-sizing: border-box;
+    outline: none; /* Remove default outline */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="text"]:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 2px rgba(var(--primary-light), 0.3);
+}
+
+input[type="text"]::placeholder {
+    color: #888;
+}
+
+.input-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px; /* Increased gap */
+    margin-bottom: 20px; /* Increased margin */
+    flex-wrap: wrap;
+}
+
+.input-group input {
+    flex-grow: 1;
+    min-width: 250px; /* Ensure input is not too small */
+}
+
+.toggle-container {
+    margin: 25px 0; /* Increased margin */
+    font-size: 1em; /* Standard font size */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Increased gap */
+}
+
+.toggle-container input[type="checkbox"] {
+    transform: scale(1.3); /* Slightly larger checkbox */
+    accent-color: var(--primary-color); /* Color the checkbox */
+}
+
+button {
+    padding: 16px 30px; /* Increased padding */
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 1.1em; /* Slightly larger font */
+    font-weight: 600; /* Bolder text */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    white-space: nowrap;
+    width: 100%; /* Default to full width in its container */
+    max-width: 300px; /* Increased max width for buttons */
+    box-sizing: border-box;
+    margin-bottom: 10px; /* Space between stacked buttons */
+    text-align: center; /* Ensure text is centered */
+    display: inline-flex; /* Use flexbox for centering text */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+button i {
+  margin-right: 8px; /* space between icon and text */
+  font-size: 1em;     /* match button font size */
+}
+
+button:hover {
+    background-color: var(--button-hover);
+    transform: translateY(-3px); /* More pronounced lift */
+    box-shadow: var(--shadow);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.special-button {
+    background-color: var(--secondary-color);
+    color: var(--bg-color); /* Dark text for bright background */
+}
+
+.special-button:hover {
+    background-color: var(--special-button-hover);
+}
+
+.dork-buttons-grid {
+    display: grid;
+    /* Max 4 columns, adjusting minimum size to fit */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 12px; /* Increased gap */
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #333;
+}
+
+.dork-buttons-grid button {
+    width: auto; /* Allow grid to manage width */
+    max-width: none; /* Remove max-width constraint for grid items */
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) { /* Adjust breakpoint for larger container */
+    .dork-buttons-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Allow more flexibility as screen shrinks */
+    }
+}
+
+@media (max-width: 992px) { /* Tablet breakpoint for 3 columns */
+    .dork-buttons-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    h2 {
+        font-size: 2em;
+    }
+    .container {
+        padding: 30px;
+    }
+    input[type="text"] {
+        padding: 14px;
+        font-size: 1em;
+    }
+    button {
+        padding: 14px 25px;
+        font-size: 1em;
+    }
+    .input-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .input-group input,
+    .input-group button {
+        width: 100%;
+        max-width: none;
+    }
+    .dork-buttons-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Adjust for smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    h2 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+    .container {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    input[type="text"] {
+        padding: 12px;
+        font-size: 0.95em;
+    }
+    button {
+        padding: 12px 15px;
+        font-size: 0.9em;
+        margin-bottom: 8px;
+    }
+    .toggle-container {
+        font-size: 0.9em;
+        margin: 15px 0;
+    }
+    .dork-buttons-grid {
+        grid-template-columns: 1fr; /* Single column on very small screens */
+        gap: 8px;
+        margin-top: 20px;
+    }
+    h3 {
+        font-size: 1.3em;
+        margin-top: 20px;
+        margin-bottom: 15px;
+    }
+
+.google-dork-btn {
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
+    padding: 14px 18px; /* ensure spacing when wrapped */
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+}
+
+</style>
+</head>
+<body>
+    <h2>Wayback Machine Snapshot Tool</h2>
+
+    <div class="container">
+        <div class="input-group">
+            <input type="text" id="mediumInput" placeholder="Enter Medium URL" />
+<button type="button" id="freediumBtn" class="special-button">
+  <i class="fas fa-book-open-reader"></i> Freedium
+</button>
+        </div>
+
+        <form id="waybackForm">
+            <div class="input-group">
+                <input type="text" id="domainInput" placeholder="Enter domain (e.g., example.com)" required />
+<button type="button" id="whoisBtn" class="special-button">
+  <i class="fas fa-user-secret"></i> WhoIs
+</button>
+            </div>
+
+            <div class="toggle-container">
+                <label>
+                    <input type="checkbox" id="clearToggle" /> Clear Input on Action
+                </label>
+            </div>
+	<div class="dork-buttons-grid">
+<button type="submit" id="viewSnapshotsBtn">
+  <i class="fas fa-history"></i> View Snapshots
+</button>
+<button type="button" id="viewcrtShBtn">
+  <i class="fas fa-certificate"></i> View Subdomains (Crt.sh)
+</button>
+<button type="button" id="nslookupBtn">
+  <i class="fas fa-network-wired"></i> NSLookup
+</button>
+
+<button type="button" id="downloadJsonBtn">
+  <i class="fas fa-file-download"></i> Download JSON
+</button>
+
+<button type="button" id="subintelBtn">
+  <i class="fas fa-eye"></i> Subintel SubDomains
+</button>
+
+	</div>
+	    
+            <h3>Subdomain & Google Dorks</h3>
+            <div class="dork-buttons-grid">
+                <button type="button" id="viewvtotal_subDomainsBtn">
+  <i class="fas fa-shield-virus"></i> View Subdomains (VirusTotal)
+</button>
+
+<button type="button" id="searchSubdomainsGoogleBtn">
+  <i class="fas fa-search"></i> Subdomains (Google)
+</button>
+
+<button type="button" id="searchSubSubdomainsGoogleBtn">
+  <i class="fas fa-search"></i> Sub-Subdomains (Google)
+</button>
+
+                <button type="button" class="google-dork-btn" data-dork="intitle:index.of">Intitle:index.of</button>
+                <button type="button" class="google-dork-btn" data-dork="site:.gov inurl:login">Gov Login Pages</button>
+                <button type="button" class="google-dork-btn" data-dork="filetype:pdf inurl:confidential">Confidential PDFs</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:admin ext:php | ext:asp | ext:aspx | ext:jsp | ext:html">Admin Pages</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:upload ext:php | ext:asp | ext:aspx | ext:jsp | ext:html">Upload Pages</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:backup ext:zip | ext:tar | ext:gz | ext:rar | ext:7z | ext:sql">Backup Files</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:sitemap.xml">Sitemap.xml</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"phpinfo()\"">Phpinfo()</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:wp-admin | inurl:wp-content | inurl:wp-includes">WordPress Files</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:config ext:php | ext:asp | ext:aspx | ext:jsp | ext:html | ext:txt">Config Files</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:env ext:txt | ext:log">Env Files</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:robots.txt">Robots.txt</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:test ext:php | ext:asp | ext:aspx | ext:jsp | ext:html">Test Pages</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:debug ext:php | ext:asp | ext:aspx | ext:jsp | ext:html">Debug Pages</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:error ext:log | ext:txt">Error Logs</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:password ext:txt | ext:log">Password Files</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"Apache Status\"">Apache Status</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"Dashboard\" inurl:8080">Jenkins/Tomcat Dashboards</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"SQL Error\" | intext:\"SQL syntax\"">SQL Errors</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:phpmyadmin">phpMyAdmin</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:cpanel">cPanel</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:webmail">Webmail</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:rds.amazonaws.com | inurl:s3.amazonaws.com">AWS S3 Buckets / RDS</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:azurewebsites.net">Azure Websites</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:gitlab.com | inurl:bitbucket.org">Git Repositories</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:jira.atlassian.net">Jira Instances</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:slack.com intext:\"public_channel\"">Slack Public Channels</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:zoom.us/j">Zoom Meetings</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:teamviewer.com/link">TeamViewer Links</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"network cameras\" inurl:viewerframe.cgi">Network Cameras</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"webcamXP\" | intitle:\"webcam7\"">WebcamXP/7</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/admin\" \"powered by\"">Admin Login Portals</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/login\" \"forgot password\"">Login Pages (Forgot Password)</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/register\" \"sign up\"">Registration Pages</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/contact\" \"email us\"">Contact Pages</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/careers\" \"job openings\"">Careers/Job Pages</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"swagger-ui.html\" | intitle:\"Swagger UI\"">Swagger UI</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/.git/config\"">Exposed .git config</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/.svn/entries\"">Exposed .svn entries</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/.well-known/security.txt\"">Security.txt</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/crossdomain.xml\"">Crossdomain.xml</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/clientaccesspolicy.xml\"">Clientaccesspolicy.xml</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"test page for apache\"">Apache Test Page</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"IIS7\" \"Default Web Site\"">IIS7 Default Pages</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"php.ini\" | intitle:\"php.ini\"">php.ini</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"web.config\" | intitle:\"web.config\"">web.config</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"connectionstrings.config\"">Connection Strings</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"passwords.txt\" | inurl:\"credentials.txt\"">Password/Credential Files</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"RDP Web Access\"">RDP Web Access</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"Citrix XenApp\" | intitle:\"Citrix StoreFront\"">Citrix Instances</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"Juniper SSL VPN\" | intitle:\"Pulse Connect Secure\"">Juniper/Pulse VPN</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"F5 BIG-IP\"">F5 BIG-IP</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"FortiGate\"">FortiGate</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"Palo Alto Networks\"">Palo Alto Networks</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"SonicWall\"">SonicWall</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/admin/config.php\"">Admin Config PHP</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/wp-config.php\"">WordPress Config</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/drupal/settings.php\"">Drupal Settings</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/joomla/configuration.php\"">Joomla Configuration</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/shell.php\" | inurl:\"/cmd.php\"">Web Shells</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/dump.sql\" | inurl:\"/database.sql\"">Database Dumps</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"index of /ftp\"">FTP Directories</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"index of /backup\"">Backup Directories</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"index of /logs\"">Log Directories</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"index of /mail\"">Mail Directories</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"index of /admin\"">Admin Directories</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"index of /dev\"">Dev Directories</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"index of /test\"">Test Directories</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"index of /private\"">Private Directories</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"wp-config.txt\" | inurl:\"wp-config.bak\"">WordPress Config Backups</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"Restricted Area\" | intitle:\"Private Access\"">Restricted/Private Access</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"user.txt\" | inurl:\"pass.txt\"">User/Pass Text Files</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"login.txt\" | inurl:\"credentials.csv\"">Login/Credential Files</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"employee.csv\" | inurl:\"staff.csv\"">Employee/Staff Lists</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"cve-2021-44228\" | intitle:\"log4j\"">Log4j Vulnerability</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"CVE-2017-5638\"">Apache Struts RCE</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"CVE-2019-19781\"">Citrix ADC/Gateway RCE</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"CVE-2020-0796\"">SMBGhost (Windows SMB)</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"CVE-2020-1472\"">Zerologon (Windows Netlogon)</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"Grafana\" inurl:\"/login\"">Grafana Login</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"Kibana\" inurl:\"/app/kibana\"">Kibana Dashboard</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"Elasticsearch Head\"">Elasticsearch Head</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"Jupyter Notebook\" inurl:\"/tree\"">Jupyter Notebook</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"RStudio Connect\"">RStudio Connect</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"SonarQube\" inurl:\"/dashboard\"">SonarQube Dashboard</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"Jenkins\" inurl:\"/login\"">Jenkins Login</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"Kubernetes Dashboard\"">Kubernetes Dashboard</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/admin/console\" intitle:\"WebLogic Server\"">WebLogic Admin Console</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/manager/html\" intitle:\"Apache Tomcat\"">Tomcat Manager</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/phpmyadmin/setup\"">phpMyAdmin Setup</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/wp-content/debug.log\"">WordPress Debug Log</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/etc/passwd\" filetype:txt">Exposed Passwd File</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/id_rsa\" | inurl:\"/id_dsa\"">Exposed SSH Keys</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/.aws/credentials\"">AWS Credentials</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"firebaseio.com\" intext:\"\"">Firebase Databases</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"slack.com/archive/\"">Slack Archives</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"trello.com/b/\" intext:\"public\"">Public Trello Boards</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"pastebin.com\" intext:\"password\"">Pastebin Passwords</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"github.com\" intext:\"password\"">Github Passwords</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"gitlab.com\" intext:\"password\"">GitLab Passwords</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"bitbucket.org\" intext:\"password\"">Bitbucket Passwords</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"Login\" inurl:\"portal\"">Login Portals</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"admin area\" inurl:\"admin\"">Admin Areas</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"configuration\" filetype:env">Configuration Env Files</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"dashboard\" inurl:\"login\"">Dashboard Login</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"index of /\" \"confidential\"">Confidential Indexed Files</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"index of /\" \"private\"">Private Indexed Files</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/wp-content/uploads/\" intitle:\"index of /\"">WordPress Uploads Directory</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/database.sql.zip\" | inurl:\"/db.sql.gz\"">Database Backups (Compressed)</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"wp-config.php.bak\"">WordPress Config Backup</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"installer.php\" | inurl:\"install.php\"">Installer Files</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"/status\" intitle:\"Server Status\"">Server Status Pages</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"editor\" inurl:\"wysiwyg\"">WYSIWYG Editors</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"Login\" inurl:\"control\"">Control Panel Login</button>
+                <button type="button" class="google-dork-btn" data-dork="intitle:\"Web Application Firewall\"">WAF Detections</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"admin\" \"version\"">Admin Page Versions</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"ext:log\" intext:\"error\"">Error Log Files</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"site:linkedin.com intext:\"password\"">LinkedIn Password Mentions</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"site:github.com intext:\"api_key\"">GitHub API Keys</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"site:trello.com intext:\"confidential\"">Trello Confidential Boards</button>
+                <button type="button" class="google-dork-btn" data-dork="inurl:\"site:google.com/drive filetype:pdf \"confidential\"">Google Drive Confidential PDFs</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function cleanUrl(url) {
+    // Remove leading http(s)://, optional www., and trailing slashes
+    url = url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/+$/, "");
+    return url;
+}
+
+
+        // Function to clear appropriate input fields
+        function clearInput(inputId) {
+            if (document.getElementById("clearToggle").checked) {
+                document.getElementById(inputId).value = "";
+            }
+        }
+
+        document.getElementById("waybackForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            
+            var domain = cleanUrl(document.getElementById("domainInput").value.trim());
+            if (domain) {
+                var waybackUrl = "https://web.archive.org/cdx/search/cdx?url=*." + domain + "/*&output=text&fl=original&collapse=urlkey";
+                window.open(waybackUrl, "_blank");
+                clearInput("domainInput");
+            } else {
+                alert("Please enter a domain URL first.");
+            }
+        });
+
+        document.getElementById("viewvtotal_subDomainsBtn").addEventListener("click", function () {
+            var domain = cleanUrl(document.getElementById("domainInput").value.trim());
+            if (domain) {
+                var vtotal_subDomains = "https://www.virustotal.com/gui/domain/" + domain + "/relations";
+                window.open(vtotal_subDomains, "_blank");
+                clearInput("domainInput");
+            } else {
+                alert("Please enter a domain URL first.");
+            }
+        });
+
+        document.getElementById("viewcrtShBtn").addEventListener("click", function () {
+            var domain = cleanUrl(document.getElementById("domainInput").value.trim());
+            if (domain) {
+                var crtSh = "https://crt.sh/?q=" + domain;
+                window.open(crtSh, "_blank");
+                clearInput("domainInput");
+            } else {
+                alert("Please enter a domain URL first.");
+            }
+        });
+
+        document.getElementById("searchSubdomainsGoogleBtn").addEventListener("click", function () {
+            var domain = cleanUrl(document.getElementById("domainInput").value.trim());
+            if (domain) {
+                var googleSearchUrl = "https://www.google.com/search?q=site:*." + domain + "%20-site:www." + domain;
+                window.open(googleSearchUrl, "_blank");
+                clearInput("domainInput");
+            } else {
+                alert("Please enter a domain URL first.");
+            }
+        });
+
+        document.getElementById("searchSubSubdomainsGoogleBtn").addEventListener("click", function () {
+            var domain = cleanUrl(document.getElementById("domainInput").value.trim());
+            if (domain) {
+                var googleSearchUrl = "https://www.google.com/search?q=site:*.*." + domain;
+                window.open(googleSearchUrl, "_blank");
+                clearInput("domainInput");
+            } else {
+                alert("Please enter a domain URL first.");
+            }
+        });
+
+        document.getElementById("downloadJsonBtn").addEventListener("click", function () {
+            var domain = cleanUrl(document.getElementById("domainInput").value.trim());
+            if (domain) {
+                var jsonUrl = "https://web.archive.org/cdx/search/cdx?url=*." + domain + "/*&output=json&fl=original&collapse=urlkey";
+                var corsProxyUrl = "https://cors-anywhere.herokuapp.com/"; // Using a public CORS proxy (note: reliability may vary)
+                fetch(corsProxyUrl + jsonUrl)
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error("Network response was not ok: " + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then((data) => {
+                        if (data.length === 0) {
+                            alert("No snapshots found for this domain.");
+                            return;
+                        }
+                        var blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+                        var url = URL.createObjectURL(blob);
+                        var a = document.createElement("a");
+                        a.href = url;
+                        a.download = `${domain}_snapshots.json`; // Dynamic filename
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                        clearInput("domainInput");
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching JSON:", error);
+                        alert("Failed to download JSON. This might be due to a CORS issue or no data from Wayback Machine. Please check console for details.");
+                    });
+            } else {
+                alert("Please enter a domain URL first.");
+            }
+        });
+
+        document.getElementById("freediumBtn").addEventListener("click", function () {
+            var mediumUrl = cleanUrl(document.getElementById("mediumInput").value.trim());
+            if (mediumUrl) {
+                var freediumUrl = "https://www.freedium.cfd/" + mediumUrl;
+                window.open(freediumUrl, "_blank");
+                clearInput("mediumInput");
+            } else {
+                alert("Please enter a Medium URL first.");
+            }
+        });
+
+        document.getElementById("nslookupBtn").addEventListener("click", function () {
+            var domain = cleanUrl(document.getElementById("domainInput").value.trim());
+            if (domain) {
+                var nslookupUrl = "https://www.nslookup.io/domains/" + domain + "/dns-records/";
+                window.open(nslookupUrl, "_blank");
+                clearInput("domainInput");
+            } else {
+                alert("Please enter a domain URL first.");
+            }
+        });
+
+        document.getElementById("whoisBtn").addEventListener("click", function () {
+            var domain = cleanUrl(document.getElementById("domainInput").value.trim());
+            if (domain) {
+                var whoisUrl = "https://www.whois.com/whois/" + domain;
+                window.open(whoisUrl, "_blank");
+                clearInput("domainInput");
+            } else {
+                alert("Please enter a domain URL first.");
+            }
+        });
+
+        // Google Dork buttons functionality
+        document.querySelectorAll(".google-dork-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                var domain = cleanUrl(document.getElementById("domainInput").value.trim());
+                var dork = this.getAttribute("data-dork");
+                let googleSearchUrl;
+
+                if (domain) {
+                    googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(dork)} site:${domain}`;
+                } else {
+                    googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(dork)}`;
+                }
+                window.open(googleSearchUrl, "_blank");
+                clearInput("domainInput"); // Clear domain input after dork search
+            });
+        });
+        document.getElementById("subintelBtn").addEventListener("click", function () {
+    var domain = cleanUrl(document.getElementById("domainInput").value.trim());
+    if (domain) {
+        var subintelUrl = "https://subintel.tushal.io/#" + encodeURIComponent(domain);
+        window.open(subintelUrl, "_blank");
+        clearInput("domainInput");
+    } else {
+        alert("Please enter a domain URL first.");
+    }
+});
+
+    </script>
+</body>
+</html>
